@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import authRoutes from "./routes/authRoutes.js";
 import explainRoutes from "./routes/explainRoute.js";
 import pdfRoutes from "./routes/pdfRoutes.js";
+import imageRoute from "./routes/imageRoute.js";
 
 const app = express();
 
@@ -16,7 +17,6 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true // If using cookies/sessions
 }));
-
 // Rate Limiting (Prevent brute-force attacks)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -32,6 +32,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api", authRoutes);
 app.use("/diagnosis", explainRoutes);
 app.use("/pdfs", pdfRoutes);
+app.use("/images", imageRoute);
 
 // Health Check Endpoint
 app.get("/", (req, res) => {
