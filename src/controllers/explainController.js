@@ -31,7 +31,7 @@ const explainLogic = async (req, res) => {
     "answer": "The patient may be experiencing an infection or possible leukemia.",
     "explanation": "Elevated WBC suggests an immune response or hematologic malignancy. Low hemoglobin points to anemia. These findings togethermay indicate a hematologic disorder and require further investigation."
     }\n
-    strictly No extra text,no extra comma , no punctuation, quotes  ,no extra backslash and no newline character , no explanation.Only a valid JSON response .`;
+    strictly No extra text,no extra comma , no extra  punctuation, quotes  ,no extra backslash and no newline character , no explanation.Only a valid JSON response .`;
 
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
