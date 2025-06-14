@@ -9,7 +9,7 @@ Absolutely! Here’s the **complete README.md** with **all your routes included*
 
 ## Table of Contents
 
-- [Installation](#installation)  
+[Installation](#installation)  
 - [Usage](#usage)  
 - [API Routes](#api-routes)  
 - [Contributing](#contributing)  
