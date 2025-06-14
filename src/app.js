@@ -7,6 +7,8 @@ import authRoutes from "./routes/authRoutes.js";
 import explainRoutes from "./routes/explainRoute.js";
 import pdfRoutes from "./routes/pdfRoutes.js";
 import imageRoute from "./routes/imageRoute.js";
+import chatRoutes from "./routes/chatRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
 
 const app = express();
 
@@ -29,6 +31,8 @@ app.use("/api", authRoutes);
 app.use("/diagnosis", explainRoutes);
 app.use("/pdfs", pdfRoutes);
 app.use("/images", imageRoute);
+app.use("/chats", chatRoutes);
+app.use("/messages", messageRoutes);
 
 // Health Check Endpoint
 app.get("/", (req, res) => {
