@@ -12,7 +12,6 @@
 - [API Routes](#api-routes)
 - [POST /api/signup](#post-signup)
 - [POST /api/login](#post-login)
-- [POST /images/extract-text](#post-extract-text)
 - [POST /diagnosis/explain](#post-explain)
 - [POST /diagnosis/lab-report](#post-lab-report)
 - [POST /pdfs/analyze-lab-report](#post-lab-report-pdf)
@@ -144,37 +143,6 @@ Authenticate a user and generate a JWT token.
     **Content:** `{ "error": "Validation failed" }`
   - **Code:** 401 Unauthorized
     **Content:** `{ "error": "Invalid credentials" }`
-
----
-
-### POST `/images/extract-text`
-
-Upload an image and extract text from it (OCR).
-
-- **Headers:**
-  `Content-Type: multipart/form-data`
-
-- **Request Body:**
-  Form-data with key `image` (image file)
-
-- **Success Response:**
-
-  - **Code:** 200 OK
-  - **Content:**
-
-  ```json
-  {
-    "success": true,
-    "extractedText": "Extracted text goes here"
-  }
-  ```
-
-- **Error Responses:**
-
-  - **Code:** 400 Bad Request
-    **Content:** `{ "error": "No image uploaded" }`
-  - **Code:** 500 Internal Server Error
-    **Content:** `{ "success": false, "error": "Failed to extract text" }`
 
 ---
 
