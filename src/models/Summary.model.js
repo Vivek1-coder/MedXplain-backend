@@ -1,19 +1,36 @@
 import mongoose from "mongoose";
-
-const summarySchema = new mongoose.Schema({
-  chatId: {
+const { Schema } = mongoose;
+const SummarySchema = new Schema({
+  user_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Chat",
     required: true,
   },
-  summaryText: {
+  metrics: {
+    type: Map,
+    of: Schema.Types.Mixed,
+    required: true,
+  },
+  remarks: {
+    type: String,
+    default: "",
+  },
+  summary: {
     type: String,
     required: true,
   },
-  generatedAt: {
+  explanation: {
+    type: String,
+    required: true,
+  },
+  actionable_insights: {
+    type: [String],
+    required: true,
+  },
+  timeStamp: {
     type: Date,
     default: Date.now,
   },
 });
 
-export default mongoose.model("Summary", summarySchema);
+const SummaryModel = mongoose.model("Explain", SummarySchema);
+export { SummaryModel };
