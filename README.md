@@ -195,9 +195,9 @@ Handle lab report logic processing.
   ```json
   {
     "metrices": {
-      "WBC": "14.2",
-      "Hemoglobin": "9.1",
-      "Platelets": "470"
+      "WBC": {"value" :"14.2","normalRange":"100-150"},
+      "Hemoglobin": {"value" :"9.1","normalRange":"100-150"},
+      "Platelets": {"value" :"470","normalRange":"100-150"}
     },
     "remarks": "Patient reports fatigue and mild fever for the past week."
   }
@@ -266,9 +266,9 @@ Extracts text from the lab-report pdf and returns matrices and remarks extracted
     "success": true,
     "response": {
       "metrics": {
-        "matrice1": "val1",
-        "matrice2": "val2",
-        "matrice3": "val3"
+        "matrice1":{"value" :"val$","normalRange":"100-150"},
+        "matrice2":{"value" :"val$","normalRange":"100-150"},
+        "matrice3": {"value" :"val$","normalRange":"100-150"}
       },
       "remarks": "remarks "
     }
@@ -307,9 +307,9 @@ Extracts text from the lab-report Image and returns matrices and remarks extract
     "success": true,
     "response": {
       "metrics": {
-        "matrice1": "val1",
-        "matrice2": "val2",
-        "matrice3": "val3"
+        "matrice1":{"value" :"val$","normalRange":"100-150"},
+        "matrice2":{"value" :"val$","normalRange":"100-150"},
+        "matrice3": {"value" :"val$","normalRange":"100-150"}
       },
       "remarks": "remarks "
     }

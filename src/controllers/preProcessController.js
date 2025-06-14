@@ -18,7 +18,7 @@ const PreprocessReport = async (req, res) => {
     {
       "metrics": {
         "metric1": {value : "value1" , normalRange: "150-200( for example)" },
-        "metric2":{value : "value2" , normalRange: "150-200( for example)" },
+        "metric2":{value : "value2" , normalRange: "100-120( for example)" },
         // Add more metrics as needed
       },
       remarks: "if Any additional remarks or notes else keep it empty"
