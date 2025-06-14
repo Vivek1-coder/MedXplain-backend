@@ -4,6 +4,7 @@ import multer from "multer";
 import fs from "fs/promises";
 import { extractText } from "../controllers/imageController.js";
 import { PreprocessReport } from "../controllers/preProcessController.js";
+import { isAuthorised } from "../middleware/authMiddleware.js";
 
 const uploadDir = "uploads/";
 await fs.mkdir(uploadDir, { recursive: true }).catch(console.error);
@@ -33,8 +34,9 @@ const router = express.Router();
 
 router.post(
   "/analyze-lab-report",
+  isAuthorised,
   upload.single("image"),
-  extractText,  // Middleware to extract text from image , that text is passed to next route handler
+  extractText, // Middleware to extract text from image , that text is passed to next route handler
   PreprocessReport //Router handler to preprocess the extracted text and return response
 );
 

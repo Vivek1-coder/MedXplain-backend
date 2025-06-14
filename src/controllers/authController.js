@@ -2,37 +2,100 @@ import bcrypt from "bcryptjs";
 import User from "../models/User.Model.js";
 
 export const signupUser = async (req, res) => {
-  const { name, email, password } = req.body;
+   const { username, email, password } = req.body;
 
-  try {
-    const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ error: "Email already exists" });
-
-    const hashed = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashed });
-
-    await newUser.save();
-
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (err) {
-    console.error("Signup error:", err.message);
-    res.status(500).json({ error: "Server error" });
+  const alreadyExists = await User.findOne({ email });
+  if (alreadyExists) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "An account with this email already exists. Please log in or use a different email address to register.",
+    });
   }
+
+  const hashPassword = await bcrypt.hash(password, 10);
+
+  const newUser = new User({
+    username,
+    email,
+    password: hashPassword,
+  });
+
+  const registeredUser = await newUser.save();
+
+  if (!registeredUser) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Registration failed" });
+  }
+
+  const token = jwt.sign(
+    { user: registeredUser.username, email: registeredUser.email },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1d",
+    }
+  );
+
+  res.cookie("auth", token, {
+    httpOnly: true,
+    signed: true,
+    secure: true,
+    sameSite: "None",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+
+  res.status(200).json({ success: true, message: "Registered Successfully!" });
 };
 
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+   const { email, password } = req.body;
 
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ error: "Invalid email" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ error: "Wrong password" });
-
-    res.status(200).json({ id: user._id, name: user.name, email: user.email });
-  } catch (err) {
-    console.error("Login error:", err.message);
-    res.status(500).json({ error: "Server error" });
+  const alreadyExists = await User.findOne({ email });
+  if (!alreadyExists) {
+    return res.status(400).json({
+      success: false,
+      message: "No user Found . Try Signing up.",
+    });
   }
+
+  const isCredentialtrue = await bcrypt.compare(
+    password,
+    alreadyExists.password
+  );
+
+  if (!isCredentialtrue) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Wrong Credential!" });
+  }
+
+  const token = jwt.sign(
+    { user: alreadyExists.username, email: alreadyExists.email },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1d",
+    }
+  );
+
+  res.cookie("auth", token, {
+    httpOnly: true,
+    signed: true,
+    secure: true,
+    sameSite: "None",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+
+  res.status(200).json({ success: true, message: "Login Successfully!" });
+};
+
+
+export const LogoutUser = async (req, res) => {
+  res.clearCookie("auth", {
+    httpOnly: true,
+    signed: true,
+    sameSite: "None",
+    secure: true,
+  });
+  res.status(200).json({ success: true, message: "Logged out successfully!" });
 };

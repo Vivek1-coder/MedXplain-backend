@@ -7,6 +7,7 @@ import { PreprocessReport } from "../controllers/preProcessController.js";
 // Ensure uploads directory exists
 const uploadDir = "uploads/";
 import { promises as fs } from "fs";
+import { isAuthorised } from "../middleware/authMiddleware.js";
 fs.mkdir(uploadDir, { recursive: true }).catch(console.error);
 
 // File upload config
@@ -33,6 +34,7 @@ const upload = multer({
 
 router.post(
   "/analyze-lab-report",
+  isAuthorised, // Middleware to check if user is authenticated
   upload.single("pdf"),
   extractLabReportData, // Middleware to extract text from PDF and that text is passed to next route handler
   PreprocessReport //Router handler to preprocess the extracted text and return response
