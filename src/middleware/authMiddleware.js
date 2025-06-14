@@ -21,7 +21,7 @@ const isAuthorised = async (req, res, next) => {
       });
     }
 
-    req.user = userfound.id; // Store user ID in request object
+    req.user = userfound; // Store user ID in request object
     next();
   } catch (err) {
     res.status(401).json({

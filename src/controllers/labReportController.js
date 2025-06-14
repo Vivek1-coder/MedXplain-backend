@@ -3,7 +3,7 @@ import {SummaryModel} from "../models/Summary.Model.js"
 const labReportLogic = async (req, res) => {
   try {
     const { metrices, remarks } = req.body;
-    const user_id=req.user;
+    const user_id=req.user._id;
 
     if (!metrices || typeof metrices !== "object") {
       return res
