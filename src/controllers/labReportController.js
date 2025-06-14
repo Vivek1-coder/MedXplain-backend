@@ -1,8 +1,9 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-
+import {SummaryModel} from "../models/Summary.Model.js"
 const labReportLogic = async (req, res) => {
   try {
     const { metrices, remarks } = req.body;
+    const user_id=req.user;
 
     if (!metrices || typeof metrices !== "object") {
       return res
@@ -64,6 +65,25 @@ const labReportLogic = async (req, res) => {
         success: true,
         message: "Model responded with a invalid JSON!",
         response: responseText,
+      });
+    }
+    // save the summary to the database
+    const newSummary = new SummaryModel({
+      user_id: user_id,
+      metrics: metrices || {},
+      remarks: remarks || "",
+      summary: parsedResponse.summary,
+      explanation: parsedResponse.explanation,
+      actionable_insights: parsedResponse.actionable_insights,
+    });
+
+    const savedSummary = await newSummary.save();
+
+    if (!savedSummary) {
+      return res.status(502).json({
+        success: true,
+        message: "Failed to save summary to the database",
+        response: parsedResponse,
       });
     }
 

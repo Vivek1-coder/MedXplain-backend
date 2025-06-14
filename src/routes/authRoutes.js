@@ -1,5 +1,9 @@
 import express from "express";
-import { signupUser, loginUser } from "../controllers/authController.js";
+import {
+  signupUser,
+  loginUser,
+  LogoutUser,
+} from "../controllers/authController.js";
 import { validateUser } from "../middleware/validateUser.js";
 import { extractLabReportData } from "../controllers/pdfParseController.js";
 import multer from "multer";

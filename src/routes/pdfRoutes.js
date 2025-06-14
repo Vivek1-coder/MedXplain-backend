@@ -34,6 +34,7 @@ const upload = multer({
 
 router.post(
   "/analyze-lab-report",
+  isAuthorised, // Middleware to check if user is authenticated
   upload.single("pdf"),
   validateUser,
   extractLabReportData, // Middleware to extract text from PDF and that text is passed to next route handler
