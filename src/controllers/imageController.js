@@ -1,35 +1,33 @@
+import { createWorker } from 'tesseract.js';
+import fs from 'fs/promises';
+
 export const extractText = async (req, res) => {
-    if (!req.file) {
+  if (!req.file) {
     return res.status(400).json({ error: 'No image uploaded' });
   }
 
+  const imagePath = req.file.path;
+
   try {
-    // Initialize Tesseract worker
-    const worker = await createWorker({
-      logger: m => console.log(m), // Optional: Log progress
-    });
+    const worker = await createWorker();
 
-    // Set language (e.g., 'eng' for English)
-    await worker.loadLanguage('eng');
-    await worker.initialize('eng');
+    // Directly call recognize, no need to load/init
+    const { data: { text } } = await worker.recognize(imagePath);
 
-    // Extract text from image
-    const { data: { text } } = await worker.recognize(req.file.path);
     await worker.terminate();
+    await fs.unlink(imagePath);
 
-    // Delete uploaded image after processing
-    await fs.unlink(req.file.path);
-
-    res.status(200).json({ 
+    return res.status(200).json({
       success: true,
-      extractedText: text.trim() 
+      extractedText: text.trim()
     });
 
   } catch (err) {
-    console.error('OCR Error:', err);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to extract text' 
+    console.error('OCR Error:', err.message);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to extract text',
+      message: err.message
     });
   }
-}
+};

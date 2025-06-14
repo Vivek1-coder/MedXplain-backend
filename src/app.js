@@ -12,11 +12,7 @@ const app = express();
 
 // Security Middleware
 app.use(helmet()); // Sets various HTTP headers for security
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || "*", // Configure allowed origins
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true // If using cookies/sessions
-}));
+app.use(cors());
 // Rate Limiting (Prevent brute-force attacks)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
