@@ -44,12 +44,18 @@ const labReportLogic = async (req, res) => {
     "Consider referral to hematologist if anemia persists."
     ]
     }
-    strictly No extra text,no extra comma , no extra punctuation, no quotes  ,no extra backslash and no newline character , no   explanation.Only a valid JSON response .
+    strictly No extra text,no extra comma , no extra punctuation, no  quotes  ,no extra backslash and no newline character , no   explanation.Only a valid JSON response .
 
     `;
 
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
+    if (!responseText) {
+      return res.status(502).json({
+        success: false,
+        message: "Model returned an empty response",
+      });
+    }
     let parsedResponse;
     try {
       parsedResponse = JSON.parse(responseText);

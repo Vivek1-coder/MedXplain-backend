@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 import multer from "multer";
 import { extractLabReportData } from "../controllers/pdfParseController.js";
+import { PreprocessReport } from "../controllers/preProcessController.js";
 
 // Ensure uploads directory exists
 const uploadDir = "uploads/";
@@ -31,9 +32,11 @@ const upload = multer({
 });
 
 router.post(
-  "/parse-lab-report",
+  "/analyze-lab-report",
   upload.single("pdf"),
-  extractLabReportData
+  extractLabReportData, // Middleware to extract text from PDF and that text is passed to next route handler
+  PreprocessReport //Router handler to preprocess the extracted text and return response
 );
+
 
 export default router;

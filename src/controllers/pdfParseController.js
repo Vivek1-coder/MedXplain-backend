@@ -34,7 +34,7 @@ function extractLabValues(text) {
 }
 
 //Main Route Handler
-export const extractLabReportData = async (req, res) => {
+export const extractLabReportData = async (req, res, next) => {
   if (!req.file) {
     return res
       .status(400)
@@ -57,12 +57,13 @@ export const extractLabReportData = async (req, res) => {
       .unlink(filePath)
       .catch((err) => console.error("Failed to delete PDF:", err));
 
-    return res.status(200).json({
-      success: true,
+    req.text = {
+      text:rawText,
       extractedValues,
-      rawText,
       cleanedText,
-    });
+    };
+    // console.log(req.text);
+    next(); // Proceed to next middleware or route handler
   } catch (err) {
     console.error("Error extracting lab report:", err);
 

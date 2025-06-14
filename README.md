@@ -214,7 +214,12 @@ Provide explanation logic for submitted data.
   `Content-Type: application/json`
 
 * **Request Body:**
-  Describe the expected JSON structure here (customize based on your logic).
+  
+  ```json
+  {
+    "query": "Your query string (for eg : Red eyes with High fever and headache)"
+  }
+  ```
 
 * **Success Response:**
 
@@ -224,14 +229,17 @@ Provide explanation logic for submitted data.
   ```json
   {
     "success": true,
-    "explanation": "Explanation text here"
+    "response": {
+      "answer":"Medical implications based on the query string",
+      "explaination":"describes the typical signs and symptoms that often appear in patients with this health issue, which likely influenced the result."
+    }
   }
   ```
 
 * **Error Responses:**
 
   * **Code:** 400 Bad Request
-    **Content:** `{ "error": "Invalid input" }`
+    **Content:** `{ success: false, message: "No Query Found!" }`
 
 ---
 
@@ -243,7 +251,15 @@ Handle lab report logic processing.
   `Content-Type: application/json`
 
 * **Request Body:**
-  Describe the expected JSON structure here.
+  ```json
+  {
+    "success": true,
+    "response": {
+      "answer":"Medical implications based on the query string",
+      "explaination":"describes the typical signs and symptoms that often appear in patients with this health issue, which likely influenced the result."
+    }
+  }
+  ```
 
 * **Success Response:**
 

@@ -1,10 +1,11 @@
 import { createWorker } from 'tesseract.js';
 import fs from 'fs/promises';
 
-export const extractText = async (req, res) => {
+export const extractText = async (req, res,next) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No image uploaded' });
   }
+  
 
   const imagePath = req.file.path;
 
@@ -17,10 +18,12 @@ export const extractText = async (req, res) => {
     await worker.terminate();
     await fs.unlink(imagePath);
 
-    return res.status(200).json({
+    req.text={
       success: true,
-      extractedText: text.trim()
-    });
+      text: text.trim()
+    };
+
+    next();
 
   } catch (err) {
     console.error('OCR Error:', err.message);

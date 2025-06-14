@@ -35,6 +35,12 @@ const explainLogic = async (req, res) => {
 
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
+    if (!responseText) {
+      return res.status(502).json({
+        success: false,
+        message: "Model returned an empty response",
+      });
+    }
     let parsedResponse;
     try {
       parsedResponse = JSON.parse(responseText);
