@@ -1,4 +1,3 @@
-Absolutely! Here’s the **complete README.md** with **all your routes included** in the `## API Routes` section, ready to copy-paste and fill further if needed:
 
 ````markdown
 # Med-x-plain-backend
@@ -9,11 +8,17 @@ Absolutely! Here’s the **complete README.md** with **all your routes included*
 
 ## Table of Contents
 
-[Installation](#installation)  
-- [Usage](#usage)  
-- [API Routes](#api-routes)  
-- [Contributing](#contributing)  
-- [License](#license)  
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Routes](#api-routes)
+- [POST /signup](#post-signup)
+- [POST /login](#post-login)
+- [POST /extract-text](#post-extract-text)
+- [POST /parse-lab-report](#post-parse-lab-report)
+- [POST /explain](#post-explain)
+- [POST /lab-report](#post-lab-report)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
