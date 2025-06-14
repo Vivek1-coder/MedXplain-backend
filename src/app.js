@@ -19,7 +19,7 @@ app.use(cors());
 // Rate Limiting (Prevent brute-force attacks)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // Limit each IP to 100 requests per window
+  max: 100, // Limit each IP to 100 requests per window
 });
 app.use(limiter);
 
@@ -40,10 +40,10 @@ app.use("/messages", messageRoutes);
 
 // Health Check Endpoint
 app.get("/", (req, res) => {
-  res.status(200).json({ 
+  res.status(200).json({
     status: "live",
     message: "Auth backend is running",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 

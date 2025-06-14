@@ -2,6 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const explainLogic = async (req, res) => {
   try {
+    console.log("helloin expalin");
     const { query } = req.body;
 
     if (!query)
@@ -47,7 +48,7 @@ const explainLogic = async (req, res) => {
     } catch (err) {
       return res.status(502).json({
         success: true,
-        message:"Model responded with a invalid JSON!",
+        message: "Model responded with a invalid JSON!",
         response: responseText,
       });
     }

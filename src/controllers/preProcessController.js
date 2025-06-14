@@ -9,7 +9,7 @@ const PreprocessReport = async (req, res) => {
         message: "No text provided for preprocessing",
       });
     }
-
+    // console.log(process.env);
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY2);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -17,8 +17,8 @@ const PreprocessReport = async (req, res) => {
     The metrics should include all relevant key medical metrice present in the document.Return the metrics in the following JSON format:
     {
       "metrics": {
-        "metric1": "value1",
-        "metric2": "value2",
+        "metric1": {value : "value1" , normalRange: "150-200( for example)" },
+        "metric2":{value : "value2" , normalRange: "100-120( for example)" },
         // Add more metrics as needed
       },
       remarks: "if Any additional remarks or notes else keep it empty"
