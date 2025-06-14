@@ -50,7 +50,7 @@ PORT=4000
 JWT_SECRET=your_jwt_secret
 MONGO_URI=your_mongo_uri
 GEMINI_API_KEY=gemini_api_key
-GEMINI_API_KEY2=another_gemini_api_key(If an alternate key is not available, use the first key here as well.)
+GEMINI_API_KEY2=another_gemini_api_key(If an alternate key is not available, first key will be used as default.)
 # Add other environment variables as needed
 ```
 
