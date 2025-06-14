@@ -27,7 +27,7 @@
 
 ```bash
 git clone https://github.com/Vivek1-coder/MedXplain-backend.git
-cd yourrepo
+cd your repo
 ```
 ````
 
