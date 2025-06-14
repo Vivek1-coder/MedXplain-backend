@@ -3,12 +3,12 @@ const router = express.Router();
 import multer from "multer";
 import { extractLabReportData } from "../controllers/pdfParseController.js";
 import { PreprocessReport } from "../controllers/preProcessController.js";
-
+import { validateUser } from "../middleware/validateUser.js";
 // Ensure uploads directory exists
 const uploadDir = "uploads/";
 import { promises as fs } from "fs";
-import { validateUser } from "../middleware/validateUser.js";
 fs.mkdir(uploadDir, { recursive: true }).catch(console.error);
+// import { isAuthorised } from "../middleware/authMiddleware.js";
 
 // File upload config
 const storage = multer.diskStorage({
@@ -34,9 +34,8 @@ const upload = multer({
 
 router.post(
   "/analyze-lab-report",
-  isAuthorised, // Middleware to check if user is authenticated
-  upload.single("pdf"),
   validateUser,
+  upload.single("pdf"),
   extractLabReportData, // Middleware to extract text from PDF and that text is passed to next route handler
   PreprocessReport //Router handler to preprocess the extracted text and return response
 );

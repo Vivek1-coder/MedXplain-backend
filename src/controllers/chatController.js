@@ -3,10 +3,14 @@ import Chat from "../models/Chat.model.js";
 // Create a new chat for the logged-in user
 export const createNewChat = async (req, res) => {
   try {
+    // console.log("gay", req.user);
     const userId = req.user._id;
-
+    // console.log(userId);
     const chat = await Chat.create({ userId });
-    res.status(201).json(chat);
+    const idString = chat._id.toString();
+    // console.log(userId);
+    // console.log(idString);
+    return res.status(201).json({ chatId: idString });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -26,10 +30,18 @@ export const getUserChats = async (req, res) => {
 
 //  Get a specific chat by ID (only if owned by user)
 export const getChatById = async (req, res) => {
+  console.log("hello gay");
   try {
-    const chat = await Chat.findById(req.params.chatId);
-    if (!chat) return res.status(404).json({ error: "Chat not found" });
+    console.log(req.body);
+    const { id: chat_id } = req.body;
+    console.log("chat_id", chat_id);
+    // console.log("gay", req.user);
+    const id = req.user._id.toString();
+    console.log(id);
 
+    const chat = await Chat.findById(chat_id);
+    if (!chat) return res.status(404).json({ error: "Chat not found" });
+    console.log(chat);
     if (chat.userId.toString() !== req.user._id.toString()) {
       return res.status(403).json({ error: "Unauthorized access to chat" });
     }
@@ -48,7 +60,9 @@ export const renameChat = async (req, res) => {
     if (!chat) return res.status(404).json({ error: "Chat not found" });
 
     if (chat.userId.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ error: "Unauthorized to rename this chat" });
+      return res
+        .status(403)
+        .json({ error: "Unauthorized to rename this chat" });
     }
 
     chat.title = newTitle || chat.title;
@@ -67,7 +81,9 @@ export const deleteChat = async (req, res) => {
     if (!chat) return res.status(404).json({ error: "Chat not found" });
 
     if (chat.userId.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ error: "Unauthorized to delete this chat" });
+      return res
+        .status(403)
+        .json({ error: "Unauthorized to delete this chat" });
     }
 
     await Chat.findByIdAndDelete(chat._id);

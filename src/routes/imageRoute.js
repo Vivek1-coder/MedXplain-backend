@@ -34,9 +34,9 @@ const router = express.Router();
 
 router.post(
   "/analyze-lab-report",
-  isAuthorised,
-  upload.single("image"),
+  // isAuthorised,
   validateUser,
+  upload.single("image"),
   extractText, // Middleware to extract text from image , that text is passed to next route handler
   PreprocessReport //Router handler to preprocess the extracted text and return response
 );

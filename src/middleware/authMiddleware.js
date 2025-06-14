@@ -1,8 +1,7 @@
-import  jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import User from "../models/User.Model.js";
 
-
-const isAuthorised = async (req, res, next) => {
+export const isAuthorised = async (req, res, next) => {
   try {
     const { auth } = req.signedCookies;
     if (!auth) {
@@ -11,13 +10,15 @@ const isAuthorised = async (req, res, next) => {
         message: "No authentication Token found. Please Login",
       });
     }
+
     const decoded = jwt.verify(auth, process.env.JWT_SECRET);
     const { user, email } = decoded;
-    const userfound = await User.findOne({ email, username:user });
+    const userfound = await User.findOne({ email, username: user });
     if (!userfound) {
       return res.status(401).json({
         success: false,
-        message: "Authentication token is invalid or expired. Please log in again.",
+        message:
+          "Authentication token is invalid or expired. Please log in again.",
       });
     }
 
@@ -31,4 +32,4 @@ const isAuthorised = async (req, res, next) => {
   }
 };
 
-export { isAuthorised };
+// export { isAuthorised };

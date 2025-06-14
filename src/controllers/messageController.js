@@ -6,8 +6,8 @@ const explainLogic = async (query, summary = "") => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-  const prompt = `You are a role-aware medical AI assistant built to assist two types of users: patients and healthcare professionals (doctors). Your core responsibility is to provide clear, evidence-based, and role-appropriate medical information — never functioning as a black box. You must explain your reasoning step by step, adapting the depth and tone of your explanation based on the user’s role.
-
+  const prompt = `You are a role-aware medical AI assistant built to assist two types of users: patients and healthcare professionals (doctors). Your core responsibility is to provide clear, evidence-based, and role-appropriate medical information — never functioning as a black box. You must explain your reasoning step by step, adapting the depth and tone of your explanation based on the user's role.
+2. Otherwise, respond with ONLY the JSON object below—no backticks, no markdown, no leading/trailing text:2. Otherwise, respond with ONLY the JSON object below—no backticks, no markdown, no leading/trailing text:2. Otherwise, respond with ONLY the JSON object below—no backticks, no markdown, no leading/trailing text:
 SUMMARY OF PREVIOUS CONVERSATION CONTEXT (for continuity):
 ${summary || "No previous conversation."}
 
@@ -39,15 +39,18 @@ TRANSPARENCY & ACCOUNTABILITY
 CURRENT USER QUERY:
 ${query}
 
-RESPONSE FORMAT (strictly JSON):  
+RESPONSE FORMAT (STRICTLY ENSURE THAT YOU DO NOT ADD ANY BACKTICKS, OR META-COMMENTARY) :  
 {
   "answer": "[Diagnosis, guidance, or summary]",
-  "explanation": "[Step-by-step reasoning behind the answer, tailored to the user role]",
+  "explaination": "[Step-by-step reasoning behind the answer, tailored to the user role]",
   "urgency_level": "[low | moderate | high | emergency]",
   "recommendation": "[e.g., Monitor at home, consult a doctor, go to ER]",
   "source_validation": "[true | false | unknown]",
   "source_comment": "[If claim is validated or debunked, explain why. If unknown, say so.]"
-}`;
+}
+###Instructions for output
+#DO NOT ADD ADD ANY META-COMMENTRY, BACKTICKS WITH JSON  
+`;
 
   const result = await model.generateContent(prompt);
   const responseText = result.response.text();
@@ -62,13 +65,14 @@ RESPONSE FORMAT (strictly JSON):
   return parsedResponse;
 };
 
-
 //generate summary
 export const generateSummary = async (messages) => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY2);
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-  const messageText = messages.map(m => `${m.role === "user" ? "User" : "AI"}: ${m.content}`).join("\n");
+  const messageText = messages
+    .map((m) => `${m.role === "user" ? "User" : "AI"}: ${m.content}`)
+    .join("\n");
 
   const summaryPrompt = `Summarize this chat for continuation in 2-3 lines:\n${messageText}`;
 
@@ -76,23 +80,29 @@ export const generateSummary = async (messages) => {
   return result.response.text().trim();
 };
 
-
 export const addMessage = async (req, res) => {
   try {
-    const { content } = req.body; // user message
-    const { chatId } = req.params;
-
+    console.log("in hcat boi");
+    const { query: content } = req.body; // user message
+    const { chatId } = req.body;
+    console.log(content, chatId);
     if (!content) {
-      return res.status(400).json({ success: false, message: "Query content required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Query content required" });
     }
 
     const chat = await Chat.findById(chatId);
     if (!chat) {
-      return res.status(404).json({ success: false, message: "Chat not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Chat not found" });
     }
-    
+
     if (String(chat.userId) !== String(req.user._id)) {
-      return res.status(403).json({ success: false, message: "Unauthorized access to this chat" });
+      return res
+        .status(403)
+        .json({ success: false, message: "Unauthorized access to this chat" });
     }
 
     // Save user message
@@ -115,13 +125,12 @@ export const addMessage = async (req, res) => {
     chat.summary = await generateSummary(chat.messages);
 
     await chat.save();
-
+    console.log(geminiResponse);
     res.status(200).json({
       success: true,
       messages: chat.messages,
       response: geminiResponse,
     });
-
   } catch (err) {
     console.error("Error:", err.message);
     res.status(500).json({ success: false, error: err.message });

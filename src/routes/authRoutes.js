@@ -2,7 +2,7 @@ import express from "express";
 import {
   signupUser,
   loginUser,
-  LogoutUser,
+  // LogoutUser,
 } from "../controllers/authController.js";
 import { validateUser } from "../middleware/validateUser.js";
 import { extractLabReportData } from "../controllers/pdfParseController.js";

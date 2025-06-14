@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet"; // Added for security headers
 import rateLimit from "express-rate-limit"; // Added for rate limiting
-import cookieParser from "cookie-parser"; 
+import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import authRoutes from "./routes/authRoutes.js";
 import explainRoutes from "./routes/explainRoute.js";
@@ -28,7 +28,7 @@ app.use(bodyParser.json({ limit: "10mb" })); // Prevent large payload attacks
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true })); // Prevent large payload attacks
 
 //cookie parser
-app.use(cookieParser(process.env.COOKIE_SECRET )); // Use cookie parser for signed cookies
+app.use(cookieParser(process.env.COOKIE_SECRET)); // Use cookie parser for signed cookies
 
 // Routes
 app.use("/api", authRoutes);
