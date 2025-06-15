@@ -1,8 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { MatricsModel } from "../models/Matrics.Model";
 
 const PreprocessReport = async (req, res) => {
   try {
     const { text } = req.text;
+    const user_id = req.user;
     if (!text) {
       return res.status(400).json({
         success: false,
@@ -55,9 +57,24 @@ const PreprocessReport = async (req, res) => {
       });
     }
 
+    // save the metrics to the database
+    const newMatrics = new MatricsModel({
+      user_id: req.user._id,
+      metrics: parsedResponse.metrics || {},
+      remarks: parsedResponse.remarks || "",
+    });
+    const savedMatrics = await newMatrics.save();
+    if (!savedMatrics) {
+      return res.status(502).json({
+        success: true,
+        message: "Failed to save metrics to the database",
+        response: parsedResponse,
+      });
+    }
+
     res.status(200).json({
       success: true,
-      response: parsedResponse,
+      response: savedMatrics,
     });
   } catch (err) {
     console.error("Error in preProcessPDF:", err);
