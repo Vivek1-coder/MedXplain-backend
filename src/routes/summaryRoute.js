@@ -33,8 +33,10 @@ router.get("/all", validateUser, async (req, res) => {
 // Route to get a single summary by ID for a user
 router.post("/single", validateUser, async (req, res) => {
   const { summaryId } = req.body;
-  const userId = req.user;
+  console.log(summaryId);
+  const userId = req.user._id.toString();
 
+  console.log("hello boi, lololo", userId);
   if (!summaryId) {
     return res.status(400).json({
       message: "Summary ID is required.",
@@ -52,7 +54,7 @@ router.post("/single", validateUser, async (req, res) => {
         message: "Summary not found for this user.",
       });
     }
-
+    console.log("here it is", summary);
     res.status(200).json({
       message: "Summary retrieved successfully.",
       summary,

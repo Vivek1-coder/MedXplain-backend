@@ -1,5 +1,22 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { SummaryModel } from "../models/Summary.Model.js";
+function sanitizeModelJson(raw) {
+  let s = raw.trim();
+
+  // 1) Strip ```json … ``` (non-greedy)
+  const fenceMatch = s.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fenceMatch) {
+    s = fenceMatch[1].trim();
+  }
+
+  // 2) Remove any leftover backticks
+  s = s.replace(/`/g, "").trim();
+
+  // 3) Remove trailing commas that might break parse
+  s = s.replace(/,\s*([}\]])/g, "$1");
+  console.log(s);
+  return s;
+}
 
 //function to extract summary using metrics and remarks
 const extractSummaryUsingMatricsAndRemarks = async (
@@ -96,6 +113,7 @@ const extractSummaryUsingMatricsAndRemarks = async (
 };
 
 const PreprocessReport = async (req, res) => {
+  console.log("lolololololo");
   try {
     const user_id = req.user;
 
@@ -138,7 +156,7 @@ const PreprocessReport = async (req, res) => {
     responseText = sanitizeModelJson(raw);
 
     let cleanResponse = responseText.trim();
-
+    console.log(responseText);
     // Remove markdown-like formatting if any
     if (cleanResponse.startsWith("```json")) {
       // console.log("int it boiiii");
@@ -172,6 +190,7 @@ const PreprocessReport = async (req, res) => {
     );
     return res.status(200).json(responseToClinet);
   } catch (err) {
+    console.log("zozozozoz");
     res.status(500).json({
       success: false,
       message: "Failed to process your query using Gemini",
