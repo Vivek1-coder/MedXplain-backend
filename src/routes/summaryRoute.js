@@ -4,7 +4,7 @@ import { SummaryModel } from "../models/Summary.Model.js";
 const router = express.Router();
 
 // Route to get all the summary of a user
-router.post("/all",
+router.get("/all",
      validateUser, 
      async (req, res) => {
   const userId = req.user;
