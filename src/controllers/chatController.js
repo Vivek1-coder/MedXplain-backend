@@ -3,15 +3,20 @@ import Chat from "../models/Chat.model.js";
 // Create a new chat for the logged-in user
 export const createNewChat = async (req, res) => {
   try {
+    console.log("I am here in create new chat")
     // console.log("gay", req.user);
+    console.log("user",req.user.id)
     const userId = req.user._id;
+    console.log("I am here in create new chat2")
     // console.log(userId);
     const chat = await Chat.create({ userId });
+    console.log("I am here in create new chat2")
     const idString = chat._id.toString();
     // console.log(userId);
     // console.log(idString);
     return res.status(201).json({ chatId: idString });
   } catch (err) {
+    
     res.status(500).json({ error: err.message });
   }
 };

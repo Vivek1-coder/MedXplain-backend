@@ -92,9 +92,10 @@ export const generateTitle = async (summary) => {
 
 export const addMessage = async (req, res) => {
   try {
-    console.log("in hcat boi");
+    console.log("I am in chat bot");
     const { query: content } = req.body; // user message
     const { chatId } = req.body;
+    console.log("content and chatId")
     console.log(content, chatId);
     if (!content) {
       return res

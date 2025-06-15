@@ -32,5 +32,5 @@ const SummarySchema = new Schema({
   },
 });
 
-const SummaryModel = mongoose.model("Metrics", SummarySchema);
+const SummaryModel = mongoose.model("Explain", SummarySchema);
 export { SummaryModel };
