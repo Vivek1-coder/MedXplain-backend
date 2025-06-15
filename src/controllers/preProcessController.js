@@ -15,7 +15,9 @@ const extractSummaryUsingMatricsAndRemarks = async (
     .map(([key, value]) => `${key}: ${value}`)
     .join(", ");
 
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY2);
+  const genAI = new GoogleGenerativeAI(
+    process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY2
+  );
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   const prompt = `You are an experienced medical assistant AI. Given a set of lab metrics and remarks, return a structured JSON response with:
@@ -93,7 +95,6 @@ const extractSummaryUsingMatricsAndRemarks = async (
   };
 };
 
-
 const PreprocessReport = async (req, res) => {
   try {
     const user_id = req.user;
@@ -106,7 +107,9 @@ const PreprocessReport = async (req, res) => {
       });
     }
     // console.log(process.env);
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY2 || process.env.GEMINI_API_KEY );
+    const genAI = new GoogleGenerativeAI(
+      process.env.GEMINI_API_KEY2 || process.env.GEMINI_API_KEY
+    );
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const prompt = `You are a medical Ai assitant.Your are provided with a text extracted from a PDF lab-report Document.Your task is to extract the key medical metrics from the text and return them in a structured JSON format.
@@ -122,7 +125,7 @@ const PreprocessReport = async (req, res) => {
     Here is the text extracted from the PDF lab-report Document:
     ${text}
     Please return the response in JSON format only.
-    strictly No extra text , no extra comma , no extra punctuation,no extra quotes  ,no extra backslash and no newline character , no explanation.Only a valid JSON response .`;
+    strictly No extra text , no extra comma , no extra punctuation,no extra quotes  ,no extra backslash and no newline character , no explanation.Only a valid JSON response.Respond with the object only and do **not** include \`\`json or anything else`;
 
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
@@ -137,6 +140,7 @@ const PreprocessReport = async (req, res) => {
 
     // Remove markdown-like formatting if any
     if (cleanResponse.startsWith("```json")) {
+      // console.log("int it boiiii");
       cleanResponse = cleanResponse.replace(/```json|```/g, "").trim();
     }
 
@@ -157,12 +161,15 @@ const PreprocessReport = async (req, res) => {
     const metrics = parsedResponse.metrics || {};
     const remarks = parsedResponse.remarks || "";
 
-    // console.log("Metrics and Remarks extracted successfully");    
+    // console.log("Metrics and Remarks extracted successfully");
     // console.log(metrics, remarks);
 
-    const responseToClinet =await  extractSummaryUsingMatricsAndRemarks(metrics, remarks, user_id);
+    const responseToClinet = await extractSummaryUsingMatricsAndRemarks(
+      metrics,
+      remarks,
+      user_id
+    );
     return res.status(200).json(responseToClinet);
-
   } catch (err) {
     res.status(500).json({
       success: false,

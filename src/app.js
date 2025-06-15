@@ -32,13 +32,14 @@ app.use(bodyParser.urlencoded({ limit: "10mb", extended: true })); // Prevent la
 app.use(cookieParser(process.env.COOKIE_SECRET)); // Use cookie parser for signed cookies
 
 // Routes
+app.use("/user-query",summaryRoute)
 app.use("/api", authRoutes);
 app.use("/diagnosis", explainRoutes);
 app.use("/pdfs", pdfRoutes);
 app.use("/images", imageRoute);
 app.use("/chats", chatRoutes);
 app.use("/messages", messageRoutes);
-app.use("/api/user-query",summaryRoute)
+
 
 // Health Check Endpoint
 app.get("/", (req, res) => {
