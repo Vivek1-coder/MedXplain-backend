@@ -35,6 +35,7 @@ function extractLabValues(text) {
 
 //Main Route Handler
 export const extractLabReportData = async (req, res, next) => {
+  console.log("popopopop");
   if (!req.file) {
     return res
       .status(400)
@@ -58,7 +59,7 @@ export const extractLabReportData = async (req, res, next) => {
       .catch((err) => console.error("Failed to delete PDF:", err));
 
     req.text = {
-      text:rawText,
+      text: rawText,
       extractedValues,
       cleanedText,
     };
