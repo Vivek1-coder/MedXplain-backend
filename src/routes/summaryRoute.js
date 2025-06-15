@@ -4,9 +4,7 @@ import { SummaryModel } from "../models/Summary.Model.js";
 const router = express.Router();
 
 // Route to get all the summary of a user
-router.get("/all",
-     validateUser, 
-     async (req, res) => {
+router.get("/all", validateUser, async (req, res) => {
   const userId = req.user;
   try {
     const allSummaries = await SummaryModel.find({ user_id: userId });
@@ -15,9 +13,13 @@ router.get("/all",
         message: "No summaries found for this user.",
       });
     }
+
+    const allSummariesIDArray = allSummaries.map((summary) => {
+      return { ID: summary._id };
+    });
     res.status(200).json({
       message: "Summaries retrieved successfully.",
-      summaries: allSummaries,
+      summaries_id_Array: allSummariesIDArray,
     });
   } catch (err) {
     console.error("Error retrieving summaries:", err);
@@ -29,9 +31,7 @@ router.get("/all",
 });
 
 // Route to get a single summary by ID for a user
-router.post("/single", 
-    validateUser,
-     async (req, res) => {
+router.post("/single", validateUser, async (req, res) => {
   const { summaryId } = req.body;
   const userId = req.user;
 
