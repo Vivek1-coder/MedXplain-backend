@@ -135,7 +135,6 @@ const PreprocessReport = async (req, res) => {
         message: "Model returned an empty response",
       });
     }
-    responseText = sanitizeModelJson(raw);
 
     let cleanResponse = responseText.trim();
 
