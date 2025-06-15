@@ -12,7 +12,7 @@ export const signupUser = async (req, res) => {
       return;
     }
     const hashed = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashed });
+    const newUser = new User({ username:name, email, password: hashed });
 
     const registeredUser = await newUser.save();
 
