@@ -1,6 +1,22 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { MatricsModel } from "../models/Matrics.Model";
+import { MatricsModel } from "../models/Matrics.Model.js";
+function sanitizeModelJson(raw) {
+  let s = raw.trim();
 
+  // 1) Strip ```json … ``` (non-greedy)
+  const fenceMatch = s.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fenceMatch) {
+    s = fenceMatch[1].trim();
+  }
+
+  // 2) Remove any leftover backticks
+  s = s.replace(/`/g, "").trim();
+
+  // 3) Remove trailing commas that might break parse
+  s = s.replace(/,\s*([}\]])/g, "$1");
+  console.log(s);
+  return s;
+}
 const PreprocessReport = async (req, res) => {
   try {
     const { text } = req.text;
@@ -28,7 +44,7 @@ const PreprocessReport = async (req, res) => {
     Here is the text extracted from the PDF lab-report Document:
     ${text}
     Please return the response in JSON format only.
-    strictly No extra text , no extra comma , no extra punctuation,no extra quotes  ,no extra backslash and no newline character , no explanation.Only a valid JSON response .`;
+    strictly No extra text , no extra comma , no extra punctuation,no extra quotes  ,no extra backslash and no newline character , no explanation.Only a valid JSON response.Respond with the object only and do **not** include \`\`json or anything else`;
 
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
@@ -38,11 +54,13 @@ const PreprocessReport = async (req, res) => {
         message: "Model returned an empty response",
       });
     }
+    responseText = sanitizeModelJson(raw);
 
     let cleanResponse = responseText.trim();
 
     // Remove markdown-like formatting if any
     if (cleanResponse.startsWith("```json")) {
+      // console.log("int it boiiii");
       cleanResponse = cleanResponse.replace(/```json|```/g, "").trim();
     }
 
