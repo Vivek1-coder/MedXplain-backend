@@ -89,7 +89,7 @@ const labReportLogic = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      response: parsedResponse,
+      response: savedSummary,
     });
   } catch (err) {
     console.error("Gemini Error:", err);
