@@ -43,9 +43,11 @@ export const validateUser = async (req, res, next) => {
           "Authentication token is invalid or expired. Please log in again.",
       });
     }
+    // console.log("hellow")
+    console.log(userfound);
     req.user = userfound; // Store user ID in request object
-    // console.log(req.user);
-    console.log("hello2");
+    console.log(req.user);
+    // console.log("hello2");
     next();
   } catch (err) {
     console.log(err);

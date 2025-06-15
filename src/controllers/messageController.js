@@ -80,11 +80,22 @@ export const generateSummary = async (messages) => {
   return result.response.text().trim();
 };
 
+export const generateTitle = async (summary) => {
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY2);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  const titlePrompt = `Give a two-three word title for this summary\n${summary}`;
+
+  const result = await model.generateContent(titlePrompt);
+  return result.response.text();
+};
+
 export const addMessage = async (req, res) => {
   try {
-    console.log("in hcat boi");
+    console.log("I am in chat bot");
     const { query: content } = req.body; // user message
     const { chatId } = req.body;
+    console.log("content and chatId")
     console.log(content, chatId);
     if (!content) {
       return res
@@ -123,7 +134,7 @@ export const addMessage = async (req, res) => {
     });
 
     chat.summary = await generateSummary(chat.messages);
-
+    chat.title = await generateTitle(chat.summary);
     await chat.save();
     console.log(geminiResponse);
     res.status(200).json({

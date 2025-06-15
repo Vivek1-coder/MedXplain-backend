@@ -10,6 +10,7 @@ import pdfRoutes from "./routes/pdfRoutes.js";
 import imageRoute from "./routes/imageRoute.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import summaryRoute from "./routes/summaryRoute.js";
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use("/pdfs", pdfRoutes);
 app.use("/images", imageRoute);
 app.use("/chats", chatRoutes);
 app.use("/messages", messageRoutes);
+app.use("/api/user-query",summaryRoute)
 
 // Health Check Endpoint
 app.get("/", (req, res) => {
