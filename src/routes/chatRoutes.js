@@ -6,7 +6,7 @@ import {
   renameChat,
   deleteChat,
 } from "../controllers/chatController.js";
-import { isAuthorised } from "../middleware/authMiddleware.js";
+// import { isAuthorised } from "../middleware/authMiddleware.js";
 import { validateUser } from "../middleware/validateUser.js";
 import { addMessage } from "../controllers/messageController.js";
 const router = express.Router();
