@@ -1,6 +1,6 @@
-# MedXplain Backend
+# EthicalMD Backend
 
-MedXplain is an advanced backend service designed to simplify and explain medical lab reports and health queries using AI, OCR, and NLP. It provides secure authentication, robust PDF/image parsing, and insightful medical explanations, making it unique for healthcare, telemedicine, and patient education platforms.
+EthicalMD is an advanced backend service designed to simplify and explain medical lab reports and health queries using AI, OCR, and NLP. It provides secure authentication, robust PDF/image parsing, and insightful medical explanations, making it unique for healthcare, telemedicine, and patient education platforms.
 
 ---
 
@@ -32,7 +32,7 @@ MedXplain is an advanced backend service designed to simplify and explain medica
 
 ---
 
-## 🌟 Why MedXplain is Unique
+## 🌟 Why EthicalMD is Unique
 
 - **End-to-End Medical Data Flow:** From raw lab report (PDF/image) to actionable insights and explanations.
 - **AI Integration:** Uses generative AI for both symptom and lab result explanations.
@@ -46,7 +46,7 @@ MedXplain is an advanced backend service designed to simplify and explain medica
 1. **Clone the repository:**
    ```bash
    git clone <repo-url>
-   cd MedXplain-backend
+   cd EthicalMD-backend
    ```
 2. **Install dependencies:**
    ```bash
