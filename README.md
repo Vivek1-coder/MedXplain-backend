@@ -1,338 +1,161 @@
-````markdown
-# Med-x-plain-backend
+# MedXplain Backend
 
-> A brief description of our project.
-
----
-
-## Table of Contents
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Routes](#api-routes)
-- [POST /api/signup](#post-signup)
-- [POST /api/login](#post-login)
-- [POST /diagnosis/explain](#post-explain)
-- [POST /diagnosis/lab-report](#post-lab-report)
-- [POST /pdfs/analyze-lab-report](#post-lab-report-pdf)
-- [POST /images/analyze-lab-report](#post-lab-report-imagge)
-- [Contributing](#contributing)
-- [License](#license)
+MedXplain is an advanced backend service designed to simplify and explain medical lab reports and health queries using AI, OCR, and NLP. It provides secure authentication, robust PDF/image parsing, and insightful medical explanations, making it unique for healthcare, telemedicine, and patient education platforms.
 
 ---
 
-### Installation
+## 🚀 Features
 
-1. Clone the repository:
+- **User Authentication:** Secure signup and login with JWT.
+- **AI-Powered Medical Explanations:** Uses generative AI to explain symptoms and lab results.
+- **Lab Report Parsing:** Extracts and analyzes data from PDF and image lab reports using OCR (Tesseract.js) and PDF parsing.
+- **Chat Sessions:** Users can create, rename, and manage chat sessions for ongoing medical queries.
+- **Summary Management:** Retrieve and review summaries of previous analyses.
+- **Rate Limiting & Security:** Helmet, CORS, and express-rate-limit for robust API security.
 
-```bash
-git clone https://github.com/Vivek1-coder/MedXplain-backend.git
-cd your repo
+---
+
+## 🛠️ Tech Stack
+
+- **Node.js** & **Express.js**: Core backend framework
+- **MongoDB** & **Mongoose**: Database and ODM
+- **Tesseract.js**: OCR for image-based lab reports
+- **pdf-parse** & **pdf-poppler**: PDF extraction
+- **@google/generative-ai**: AI-powered explanations
+- **JWT**: Authentication
+- **Multer**: File uploads
+- **Helmet, CORS, express-rate-limit**: Security
+
+### Main Dependencies
+
+- express, mongoose, bcryptjs, jsonwebtoken, multer, dotenv, helmet, cors, express-rate-limit, tesseract.js, pdf-parse, pdf-poppler, @google/generative-ai
+
+---
+
+## 🌟 Why MedXplain is Unique
+
+- **End-to-End Medical Data Flow:** From raw lab report (PDF/image) to actionable insights and explanations.
+- **AI Integration:** Uses generative AI for both symptom and lab result explanations.
+- **Multi-format Support:** Handles both PDF and image uploads for lab reports.
+- **Session & Summary Management:** Users can track, review, and manage their medical queries and summaries.
+
+---
+
+## ⚡ Installation & Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone <repo-url>
+   cd MedXplain-backend
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Configure environment variables:**
+   Create a `.env` file with:
+   ```env
+   PORT=4000
+   JWT_SECRET=your_jwt_secret
+   MONGO_URI=your_mongo_uri
+   GEMINI_API_KEY=your_gemini_api_key
+   GEMINI_API_KEY2=optional_second_key
+   ```
+4. **Start the server:**
+   ```bash
+   npm start
+   ```
+
+---
+
+## 📚 API Routes
+
+### Auth
+
+- `POST /api/signup` — Register a new user
+- `POST /api/login` — Login and receive JWT
+
+### Chat
+
+- `POST /api/chats/new-session` — Start a new chat session
+- `GET /api/chats/allChats` — Get all user chat sessions
+- `POST /api/chats/loadChat` — Load a specific chat by ID
+- `PATCH /api/chats/:chatId/title` — Rename a chat session
+- `DELETE /api/chats/:chatId` — Delete a chat session
+- `POST /api/chats/query` — Add a message/query to a chat
+
+### Messages
+
+- `POST /api/messages/:chatId/message` — Add a message to a chat
+
+### Medical Explanations
+
+- `POST /api/explain/explain` — Get AI-powered explanation for symptoms/queries
+
+### Lab Report Parsing
+
+- `POST /api/pdfs/analyze-lab-report` — Upload and analyze a PDF lab report
+- `POST /api/images/analyze-lab-report` — Upload and analyze an image lab report
+
+### Summaries
+
+- `GET /api/summary/all` — Get all summaries for a user
+- `POST /api/summary/single` — Get a specific summary by ID
+
+---
+
+## 📄 Example Requests
+
+### Signup
+
+```json
+POST /api/signup
+{
+  "username": "john",
+  "email": "john@example.com",
+  "password": "yourpassword"
+}
 ```
-````
 
-2. Install dependencies:
+### Login
 
-```bash
-npm install
+```json
+POST /api/login
+{
+  "email": "john@example.com",
+  "password": "yourpassword"
+}
 ```
 
-3. Start the server:
+### Analyze Lab Report (PDF)
 
-```bash
-npm start
-```
+- `POST /api/pdfs/analyze-lab-report` (form-data: pdf)
 
-4. (Optional) Configure environment variables in `.env`:
+### Analyze Lab Report (Image)
 
-```env
-PORT=4000
-JWT_SECRET=your_jwt_secret
-MONGO_URI=your_mongo_uri
-GEMINI_API_KEY=gemini_api_key
-GEMINI_API_KEY2=another_gemini_api_key(If an alternate key is not available, first key will be used as default.)
-# Add other environment variables as needed
-```
+- `POST /api/images/analyze-lab-report` (form-data: image)
 
 ---
 
-## Usage
-
-This backend provides authentication, OCR text extraction, and lab report parsing APIs.
-
-You can send HTTP requests to the endpoints described below.
-
----
-
-## API Routes
-
-### POST `/api/signup`
-
-Register a new user.
-
-- **Headers:**
-  `Content-Type: application/json`
-
-- **Request Body:**
-
-  ```json
-  {
-    "username": "string",
-    "email": "string",
-    "password": "string"
-  }
-  ```
-
-- **Success Response:**
-
-  - **Code:** 201 Created
-  - **Content:**
-
-  ```json
-  {
-    "success": true,
-    "message": "User registered successfully",
-    "userId": "unique_user_id"
-  }
-  ```
-
-- **Error Responses:**
-
-  - **Code:** 400 Bad Request
-    **Content:** `{ "error": "Validation failed" }`
-  - **Code:** 409 Conflict
-    **Content:** `{ "error": "User already exists" }`
-
----
-
-### POST `/api/login`
-
-Authenticate a user and generate a JWT token.
-
-- **Headers:**
-  `Content-Type: application/json`
-
-- **Request Body:**
-
-  ```json
-  {
-    "email": "string",
-    "password": "string"
-  }
-  ```
-
-- **Success Response:**
-
-  - **Code:** 200 OK
-  - **Content:**
-
-  ```json
-  {
-    "success": true,
-    "user": {
-      "id": "unique_user_id",
-      "username": "string",
-      "email": "string"
-    }
-  }
-  ```
-
-- **Error Responses:**
-
-  - **Code:** 400 Bad Request
-    **Content:** `{ "error": "Validation failed" }`
-  - **Code:** 401 Unauthorized
-    **Content:** `{ "error": "Invalid credentials" }`
-
----
-
-### POST `/diagnosis/explain`
-
-Provide explanation logic for submitted data.
-
-- **Headers:**
-  `Content-Type: application/json`
-
-- **Request Body:**
-
-  ```json
-  {
-    "query": "Your query string (for eg : Red eyes with High fever and headache)"
-  }
-  ```
-
-- **Success Response:**
-
-  - **Code:** 200 OK
-  - **Content:**
-
-  ```json
-  {
-    "success": true,
-    "response": {
-      "answer": "Medical implications based on the query string",
-      "explaination": "describes the typical signs and symptoms that often appear in patients with this health issue, which likely influenced the result."
-    }
-  }
-  ```
-
-- **Error Responses:**
-
-  - **Code:** 400 Bad Request
-    **Content:** `{ success: false, message: "No Query Found!" }`
-
----
-
-### POST `/diagnosis/lab-report`
-
-Handle lab report logic processing.
-
-- **Headers:**
-  `Content-Type: application/json`
-
-- **Request Body:**
-
-  ```json
-  {
-    "metrices": {
-      "WBC": {"value" :"14.2","normalRange":"100-150"},
-      "Hemoglobin": {"value" :"9.1","normalRange":"100-150"},
-      "Platelets": {"value" :"470","normalRange":"100-150"}
-    },
-    "remarks": "Patient reports fatigue and mild fever for the past week."
-  }
-  ```
-
-- **Success Response:**
-
-  - **Code:** 200 OK
-  - **Content:**
-
-  ```json
-  {
-    "success": true,
-    "response": {
-      "summary": "Elevated WBC count with low hemoglobin
-      and high platelets suggest possible infection and
-      anemia",
-      "explanation": "The high white blood cell count
-      indicates the body is fighting an infection or
-      inflammation. The low hemoglobin level points to
-       anemia which can cause fatigue. The high platelet
-       count might be a reaction to the infection or a
-       separate issue",
-      "actionable_insights": [
-        "Order a differential blood count to identify the
-        type of infection",
-        "Perform a complete blood count with peripheral smear
-         to further assess anemia and rule out other blood
-         disorders",
-        "Check iron studies ferritin transferrin saturation
-        to investigate iron deficiency anemia",
-      ]
-    }
-  }
-  ```
-
-- **Error Responses:**
-
-  - **Code:** 400 Bad Request
-    **Content:** `{ "error": "Invalid input" }`
-
----
-
-### POST `/pdfs/analyze-lab-report`
-
-Extracts text from the lab-report pdf and returns matrices and remarks extracted from the report .
-
-- **Headers:**
-  `Content-Type: application/json`
-
-- **Request Body (form-data):**
-
-  ```json
-  {
-    "pdf": "<uploaded pdf file>"
-  }
-  ```
-
-- **Success Response:**
-
-  - **Code:** 200 OK
-  - **Content:**
-
-  ```json
-  {
-    "success": true,
-    "response": {
-      "metrics": {
-        "matrice1":{"value" :"val$","normalRange":"100-150"},
-        "matrice2":{"value" :"val$","normalRange":"100-150"},
-        "matrice3": {"value" :"val$","normalRange":"100-150"}
-      },
-      "remarks": "remarks "
-    }
-  }
-  ```
-
-- **Error Responses:**
-
-  - **Code:** 400 Bad Request
-    **Content:** `{ "error": "Invalid input" }`
-
----
-
-### POST `/images/analyze-lab-report`
-
-Extracts text from the lab-report Image and returns matrices and remarks extracted from the report .
-
-- **Headers:**
-  `Content-Type: application/json`
-
-- **Request Body (form-data):**
-
-  ```json
-  {
-    "image":"<uploaded image>"
-  }
-  ```
-
-- **Success Response:**
-
-  - **Code:** 200 OK
-  - **Content:**
-
-  ```json
-  {
-    "success": true,
-    "response": {
-      "metrics": {
-        "matrice1":{"value" :"val$","normalRange":"100-150"},
-        "matrice2":{"value" :"val$","normalRange":"100-150"},
-        "matrice3": {"value" :"val$","normalRange":"100-150"}
-      },
-      "remarks": "remarks "
-    }
-  }
-  ```
-
-- **Error Responses:**
-
-  - **Code:** 400 Bad Request
-    **Content:** `{ "error": "Invalid input" }`
-
----
-
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request.
 
 ---
 
-## License
+## 📜 License
 
-ISC.
+ISC
 
-```
+---
 
-```
+## 👨‍⚕️ Authors & Credits
+
+- Built by the MedXplain Team
+- AI powered by Google Gemini
+
+---
+
+## 📬 Contact
+
+For support or business inquiries, please contact the repository owner.

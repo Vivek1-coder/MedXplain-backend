@@ -12,7 +12,7 @@ export const signupUser = async (req, res) => {
       return;
     }
     const hashed = await bcrypt.hash(password, 10);
-    const newUser = new User({ username:name, email, password: hashed });
+    const newUser = new User({ username: name, email, password: hashed });
 
     const registeredUser = await newUser.save();
 
@@ -41,10 +41,7 @@ export const loginUser = async (req, res) => {
     }
     const token = jwt.sign(
       { id: user._id, name: user.name, email: user.email },
-      "broisgay",
-      {
-        expiresIn: "10d",
-      }
+      "broisgay"
     );
     res
       .status(200)
