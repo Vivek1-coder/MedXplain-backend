@@ -151,7 +151,7 @@ ISC
 
 ## 👨‍⚕️ Authors & Credits
 
-- Built by the MedXplain Team
+- Built by the  Team
 - AI powered by Google Gemini
 
 ---
